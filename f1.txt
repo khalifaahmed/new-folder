@@ -1,2 +1,6 @@
 first  line
 second line
+
+capwap ap primary-base 3802iB-K910.176.59.10
+ap-type mobility-express tftp://10.176.63.5/AIR-AP3800-K9-ME-8-10-196-0.tar
+capwap ap ip  10.176.63.11  255.255.255.0  10.176.63.1
