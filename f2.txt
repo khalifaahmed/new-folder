@@ -5,3 +5,31 @@ Host *
     StrictHostKeyChecking no
     Ciphers +aes128-cbc,3des-cbc,aes192-cbc,aes256-cbc
     UserKnownHostsFile /dev/null 
+
+
+service password-encryption
+https://www.ifm.net.nz/cookbooks/cisco-ios-enable-secret-password-cracker.html
+
+
+Boot field --> 0x2102 --> the last Hexa digit
+     0     --> boot from ROMMON
+     1     --> boot from the first IOS in flash
+    2-f    --> read the boot system command in NVRAM.if                         not, boot from the first IOS in flash. If not, broadcast  to boot from TFTP server. If not, boot from ROMMON
+
+
+dir flash:
+boot system flash ?
+boot system tftp://10.0.0.1/----.bin
+
+
+Password Recovery: 
+1- Adjust the value of the configure register 0x2102 --> 0x2142 (the 7th bit starting from right 
+2- ctr+(break|pause) 
+3- confreg 0x2142  +  reset --> bypass NVRAM (where the startup-config lives)
+4- copy start run
+5- sh version --> To see what is the value of confer
+6- config-register 0x2102
+7- reload
+
+
+#service password-recovery
