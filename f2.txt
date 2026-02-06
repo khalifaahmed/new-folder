@@ -33,8 +33,10 @@ Password Recovery:
 #service password-recovery
 
 
-
+sudo su -
+ansible-playbook deploy-zabbix.yml -i "localhost," -c local
 ansible-playbook my_playbook.yml -i "localhost," -c local
+
 
 
 
