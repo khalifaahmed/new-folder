@@ -21,7 +21,6 @@ dir flash:
 boot system flash ?
 boot system tftp://10.0.0.1/----.bin
 
-
 Password Recovery: 
 1- Adjust the value of the configure register 0x2102 --> 0x2142 (the 7th bit starting from right 
 2- ctr+(break|pause) 
@@ -31,5 +30,13 @@ Password Recovery:
 6- config-register 0x2102
 7- reload
 
-
 #service password-recovery
+
+
+
+ansible-playbook my_playbook.yml -i "localhost," -c local
+
+
+
+
+
