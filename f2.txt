@@ -38,6 +38,7 @@ ansible-playbook deploy-zabbix.yml -i "localhost," -c local
 ansible-playbook my_playbook.yml -i "localhost," -c local
 
 
+system auth session-terminate all
 
 
 
