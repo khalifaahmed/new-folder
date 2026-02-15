@@ -104,3 +104,200 @@ if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000)
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+curl --digest -u admin:'HQ@netcam!@#' http://10.175.0.203/ISAPI/ContentMgmt/InputProxy/channels
+
+
+
+curl --digest -u admin:'HQ@netcam!@#' -X PUT -H "Content-Type: application/xml" -d '<InputProxyChannel version="2.0" xmlns="http://www.isapi.org/ver20/XMLSchema"><id>20</id><name>New_Camera_20</name><sourceInputPortDescriptor><proxyProtocol>HIKVISION</proxyProtocol><addressingFormatType>ipaddress</addressingFormatType><ipAddress>10.175.0.107</ipAddress><managePortNo>8000</managePortNo><srcInputPort>1</srcInputPort><userName>admin</userName><password>IT@cam!@#</password><streamType>auto</streamType></sourceInputPortDescriptor></InputProxyChannel>' http://10.175.0.203/ISAPI/ContentMgmt/InputProxy/channels/25
+
+<?xml version="1.0" encoding="UTF-8" ?>
+<ResponseStatus version="2.0" xmlns="http://www.isapi.org/ver20/XMLSchema">
+<requestURL>/ISAPI/ContentMgmt/InputProxy/channels/25</requestURL>
+<statusCode>1</statusCode>
+<statusString>OK</statusString>
+<subStatusCode>ok</subStatusCode>
+</ResponseStatus>
+
+
+
+
+
+
+license udi pid ISR4351/K9 sn FDO192304B9
+license accept end user agreement
+license boot level appxk9
+license boot level uck9
+license boot level securityk9
+
+
+
+
+
+
+
+
+
+
+sh ephone registered summary 
+sh ephone registered summary 
+sh ephone-dn 375 
+sh voice register pool 75
+sh voice register dn 75
+show voice register pool brief
+Dn Tag 86
+Config:
+  Number is 9086
+  Preference is 0
+  Huntstop is disabled
+  Name IT-Khalifa
+  Auto answer is disabled
+  Label is Khalifa
+  No registration to external proxy
+  Pool 86   has this DN configured for line 1
+
+
+
+
+voice register pool 5
+  url directories http://10.110.70.57:5000/directory
+  apply-config
+-------------------------------------------
+voice register pool [رقم_البول]
+ ! button [رقم الزرار]:[رقم الـ DN]
+ ! هنا هنستخدم صيغة الـ Service URL
+ service-url button 3 Company_Dir
+ apply-config
+
+-------------------------------------------
+
+
+sh run | s voice register pool
+
+voice register pool  86
+ busy-trigger-per-button 2
+ id mac 0077.8DF9.6914
+ type 7811
+ number 1 dn 86
+ template 10
+ username 9086 password 9086
+ codec g711ulaw
+
+
+voice register pool  75
+ busy-trigger-per-button 2
+ id mac 0077.8DF9.64AC
+ type 7811
+ number 1 dn 75
+ template 10
+ username 9075 password 9075
+ codec g711ulaw
+ 
+
+
+
+
+
+
+
+
+
+
+Station name Hekal/A.Ehab-Tax, Station number 9374
+
+
+
+
+------------------------------------------
+
+
+ephone  376
+ device-security-mode none
+ mac-address 0013.C339.A4EF
+ button  1:376
+
+
+ephone-dn  376  dual-line
+ number 9375
+ label Gehad-Tax
+ name Gehad-Tax
+ call-forward max-length 0
+ corlist incoming User
+
+
+-----------------------------------------
+
+telephony-service
+ url directories http://192.168.1.10:5000/directory
+ exit
+
+telephony-service
+ create cnf-files
+ reset all
+
+--------------------------------------------------
+
+voice register global 
+  url directory http://10.110.70.57:5001/cme
+  create profile
+
+------------------------------------------------------------
+voice register global
+  url service http://10.110.70.57:5001/cme           !-->CME services URLs
+
+
+-----------------------------------------------------
+voice register template 10
+  url service http://10.110.70.57:5001/cme  
+
+voice register pool 86
+  template 10
+  apply-config
+
+
+
+
+
+8875.5651.0675
+001E.4A92.D2FD
+001F.9E24.BD7D
+
+
+
+
+ephone-dn  65  octo-line
+ call-waiting ring
+ number 9064
+ label Osama Abdelkhalek
+ name Osama Abdelkhalek
+ call-forward noan 9664 timeout 15
+ corlist incoming Operator
+
+ephone  65
+ device-security-mode none
+ mac-address 203A.07FC.39EB
+ speed-dial 1 87# label "Land_Line"
+ speed-dial 2 9069 label "Sensei"
+ speed-dial 3 83# label "Vodafone"
+ speed-dial 4 81# label "Etisalat"
+ speed-dial 5 82# label "Orange"
+ button  1:65
+
+
+
+
+
