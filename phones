@@ -183,5 +183,37 @@ pip install customtkinter pandas netmiko
 
 
 
+
+
+
+
+
+
+
+
+telephony-service
+ max-dn 100
+!
+ephone-dn  10  shared
+ number 9000
+ name Office_Group
+ huntstop channel 3    # دي أهم نقطة: بتسمح بـ 3 مكالمات في نفس الوقت على نفس الرقم
+ call-waiting ring     # عشان لو فيه مكالمة تانية جت تظهر للي مش مشغولين
+!
+ephone  1
+ button  1:10          # ربط الزرار الأول بـ DN 10
+!
+ephone  2
+ button  1:10          # ربط الزرار الأول بـ DN 10
+!
+ephone  3
+ button  1:10          # ربط الزرار الأول بـ DN 10
+
+
+
+
+
+
+
   
 
