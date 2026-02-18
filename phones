@@ -169,7 +169,7 @@ dial-peer voice 2 pots      !-->how to give an analog phon a number
 #show dial-peer voice summary
 
 
-
+-----------------------------------------------------------------------------------------------------------------------------
 
 
 
@@ -180,15 +180,87 @@ pip install ttkbootstrap
 pip install customtkinter pandas netmiko
 
 
+-----------------------------------------------------------------------------------------------------------------------------
 
 
+from flask import Flask, Response, request
+
+app = Flask(__name__)
+
+# هيكل بيانات شجري (Nested)
+database = {
+    "IT": {
+        "Infrastructure": [
+            {"name": "Ahmed Ali", "number": "1001"},
+            {"name": "Maged Saeed", "number": "1002"}
+        ],
+        "Software": [
+            {"name": "Hassan Dev", "number": "1003"}
+        ]
+    },
+    "HR": {
+        "Recruitment": [
+            {"name": "Sara Omar", "number": "2001"}
+        ],
+        "Payroll": [
+            {"name": "Laila Helmy", "number": "2002"}
+        ]
+    }
+}
+
+SERVER_IP = "192.168.1.10"  # حط IP جهازك هنا
+
+@app.route('/directory')
+@app.route('/directory/<path:subpath>')
+def directory(subpath=None):
+    # التنقل داخل الـ Dictionary بناءً على المسار
+    current_level = database
+    path_parts = subpath.split('/') if subpath else []
+    
+    for part in path_parts:
+        current_level = current_level.get(part, {})
+
+    # إذا كان المستوى الحالي عبارة عن Dictionary (يعني فيه أقسام فرعية)
+    if isinstance(current_level, dict):
+        xml = f"""<?xml version="1.0" encoding="UTF-8"?>
+        <CiscoIPPhoneMenu>
+            <Title>Directory</Title>
+            <Prompt>Select Group</Prompt>"""
+        
+        for key in current_level.keys():
+            # بناء الرابط للمستوى التالي
+            next_path = f"{subpath}/{key}" if subpath else key
+            xml += f"""
+            <MenuItem>
+                <Name>{key}</Name>
+                <URL>http://{SERVER_IP}:5000/directory/{next_path}</URL>
+            </MenuItem>"""
+        
+        xml += "</CiscoIPPhoneMenu>"
+        
+    # إذا كان المستوى الحالي عبارة عن List (يعني وصلنا للأسماء)
+    else:
+        xml = f"""<?xml version="1.0" encoding="UTF-8"?>
+        <CiscoIPPhoneDirectory>
+            <Title>Contacts</Title>
+            <Prompt>Select to Dial</Prompt>"""
+        
+        for person in current_level:
+            xml += f"""
+            <DirectoryEntry>
+                <Name>{person['name']}</Name>
+                <Telephone>{person['number']}</Telephone>
+            </DirectoryEntry>"""
+            
+        xml += "</CiscoIPPhoneDirectory>"
+
+    return Response(xml, mimetype='text/xml')
+
+if __name__ == '__main__':
+    app.run(host='0.0.0.0', port=5000, debug=True)
 
 
-
-
-
-
-
+-----------------------------------------------------------------------------------------------------------------------------
 
 
 telephony-service
