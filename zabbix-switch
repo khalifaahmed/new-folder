@@ -1,0 +1,31 @@
+snmp --> udp 161,161 --> For Monitoring and Management
+HP open view, cisco works, PRTG, IBM neusecure, cacti
+
+For Routers & Switches:
+
+#snmp-server community CCNA           !--> the Important command (like a password bet the zabbix server and the switch)
+#snmp-server location First_floor     !--> for showing off
+#snmp-server contact ahmed            !--> for showing off
+#snmp-server host 10.0.0.1 version 2c CCNA 
+
+Another Way:
+#snmp-server enable traps
+
+---------------------------------------------------------
+snmp version 3
+On Routers:
+#snmp-server group group1 v3 priv !-->supports authentican and privacy (encryption)
+#snmp-server user user1 group1 v3 auth sha auth_pass priv aes 128 encryption_pass
+#snmp-server enable traps 
+
+#show run
+#show snmp user
+
+
+
+
+
+
+
+
+
