@@ -1,0 +1,258 @@
+the first thing the telephone does --> configure its vlan by cdp protocol
+
+access port --> receives data untagged --> data 
+trunk port  --> receives data tagged   --> voice
+minitrunk  --> receives both tagged (voice) and untagged (data)
+
+The Router will be --> dhcp server - tftp server (phones IOS) - cme
+the Router to support voice --> must have voice processor call PVDM
+
+#show voice dsp detail
+--> look at the numbers under version. if they are zeros, it does not work. if not zeros, it is working 
+
+ds0 --> digital channel BW = 64 kbit
+Sampling: 
+analog -- digital --> Fm for human voice = 4 kHz --> Fs = 2 * Fm = 2 * 4kHz = 8 k sample/sec
+each sample represented within 8 bits --> so, BW of DS0 = 8 k sample/sec * 8 bits = 64 kbit/sec --> this is call codec g711 --> this is suitable for LAN
+
+MOS --> main opinion score --> a number 0-5 reflects the efficiency of the voice --> the higher, the better
+
+dsp supports certain number of channels
+#show inventory
+  - shows info about the H/W of the Router including the PVDM, fsx and fxo
+  - showing you the PVDM doesn't mean that the PVDM is working --> to know whether it is working 
+--> #show voice dsp detail --> look at the numbers under version -->  if they are zeros, it is not working. if they are not zeros, the PVDM is working 
+  - Router model 2xxx and above --> must have PVDM vic2 --> second generation
+
+#show diag
+  - show you whether the vic card is working 
+
+
+
+1- #show inventory
+     - show you everything installed on the device including the PVDM and the voice cards fsx and fxo. but, will not show you whether if they are working 
+ 
+2- #shwo voice dsp detail
+     - show you whether the PVDM is working --> the numbers under version must not be zero
+     - Router model 2xxx and above --> must have PVDM vic 2 (2nd Generation)
+
+3- #show diag 
+     - show you whether the fxo,fxs are working
+
+#show ip dhcp pool
+#show ip dhcp binding
+
+1- the ephone sends a cdp packet to the sw to know its voice vlan 
+2- Depending on the vlan the ephone is in --> it broadcasts for dhcp server --> Depending on int vlan... --> the ephone go to 10.0.0.1 --> as a dhcp server to obtain an ip
+3- Depending on the tftp server taked by the dhcp server --> it goes to 10.0.0.1 as a tftp server --> to download its firmware
+4- The firmware downloaded contains the ip && port of the cme --> then the ephone goes to 10.0.0.1 as a cme --> ip  source-address 10.0.0.1 port 2000
+
+
+
+#telephony-service                        !--> To be cme --> must have PVDM && the IOS supports voice 
+  ip  source-address 10.0.0.1 port 2000   !--> tells the router the interface at which it should accept the ephones registration requests --> must match the dhcp optioin 150
+  create cnf-files                        !--> To be tftp server --> for ephones to download their firmware
+  max-ephone ?
+  max-dn ?
+
+
+
+# TFTP Server (Point to firmware files in flash)
+Router(config)# tftp-server flash:P00308000500.bin
+ 
+#show ephone registered summary
+#show ephone
+#show licience
+#show run | sec ephone 
+#show run | sec ephone-dn
+#show run | sec voice register pool
+#show run | sec voice register dn
+#show voice register pool 86
+
+
+
+ephone-dn 1
+  number 1001
+  name ahmed   !-->appears to you int front of the button locally
+  lable ahmed  !-->appears to whom you call
+  description  !-->written in front of the button locally instead of the number itself
+  caller-id block !-->block your name on whom you call  
+  call-forward all/busy
+  call-forward noan 1001 timeout 15
+
+ephone-dn dual-line  !-->for watting property
+  number 1002 
+    
+ephone-dn 20
+  number 1020
+  name park-number
+  park-slot timeout 10 limit 3 !-->remind me every 10 sec of the parked call for 3 times
+  
+
+
+ephone 1
+  mac-address -----
+  type ----
+  button 1:1
+  button 2:1  !-->dn 2 monitors && speed dial for dn 1
+  button 2f6  !-->change ring tone
+  restart
+
+
+
+vic1,2     -->1st or 2nd Generation
+2,4fxs,fxo -->2 ports or 4 ports
+
+-when you connect an analog phone to fxs port -->it automatically works and you can call any created dn number
+
+
+#show voice port summary
+
+voice-port 0/3/3
+  connection plar 1010  !-->when you pick up the phone --> it automatically call 1010
+
+-----------------------------------------------------------
+
+ephone-dn 10
+  number 1010
+  preference 0  !-->The least is the best
+  no huntstop   !-->when it is busy --> go to the one after it
+
+ephone-dn 11
+  number 1010
+  preference 1
+  no huntstop
+
+ephone-dn 12
+  number 1010
+  preference 2
+  no huntstop
+
+ephone-dn 13
+  number 1010
+  preference 3
+  no huntstop
+
+ephone 1
+  button 5:10
+  restart
+
+ephone 2
+  button 5:11
+  restart
+
+ephone 3
+  button 5:12
+  restart
+
+ephone 4
+  button 5:13
+  restart
+
+----------------------------------------------------------- 
+
+csim start 1001  !-->call from the router itself
+
+-----------------------------------------------------------
+
+dial-peer voice 1  !--> it could be --> voip --> to specific ip
+                                    --> pots --> to specific port
+
+dial-peer voice 1 voip  
+  destination-pattern 2... 
+  session-target ipv4:10.0.0.2
+
+dial-peer voice 2 pots      !-->how to give an analog phon a number
+  destination-pattern 1030 
+  port 0/3/0 
+ 
+dial-peer voice 2 pots
+  destination-pattern 01.........
+  port 3/0
+
+voice-port 3/0
+  connection plar 1010  !-->when someone calls the mobile no installed on primacell --> it calls 1010
+
+#show voice port summary
+#show dial-peer voice summary
+
+
+
+
+=================================================================================
+
+
+pip install pandas openpyxl netmiko
+sudo apt-get update
+sudo apt-get install python3-tk
+pip install ttkbootstrap
+pip install customtkinter pandas netmiko
+
+
+
+=================================================================================
+SIP phone configurations:
+
+voice regisger global  !=== telephony-service
+  mode cme               !--> must be written
+  source-address 10.0.0.1 port 5060
+  max-pool ?
+  max-dn ?
+  create profile
+
+voice register dn 1
+ number 1001
+  
+voice register pool 1
+  id mac -----
+  type ---
+  number 1 dn 1
+
+voice register global
+  no create profile
+  no tftp-path flash:
+  tftp-path flash:
+  create profile
+
+voice service voip
+  allow-connectios sip to sip
+  sip 
+    registrar server
+
+sh voice register pool   1
+sh voice register dn   1
+sh run | sec voice register poo
+sh run | sec voice register dn
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
